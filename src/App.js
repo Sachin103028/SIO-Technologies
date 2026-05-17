@@ -200,11 +200,12 @@ function HeroSection() {
   const [idx, setIdx] = useState(0);
   const [fade, setFade] = useState(true);
   useEffect(() => {
-    const t = setInterval(() => {
+    const interval = setInterval(() => {
       setFade(false);
-      setTimeout(() => { setIdx(i => (i + 1) % words.length); setFade(true); }, 380);
+      setTimeout(() => { setWordIdx(i => (i + 1) % words.length); setFade(true); }, 400);
     }, 2800);
-    return () => clearInterval(t);
+    return () => clearInterval(interval);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
     <section id="hero" style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", textAlign: "center", padding: "8rem 2rem 4rem", position: "relative" }}>
