@@ -1,6 +1,7 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable no-unused-vars */
 import { useState, useEffect, useRef } from "react";
 
-// ─── REAL COMPANY INFO ───────────────────────────────────────────────
 const COMPANY = {
   name: "SIO Technologies",
   tagline: "Seamless Intelligence Operations",
@@ -63,38 +64,31 @@ const FAQ = [
   { q: "Can you integrate with our existing systems?", a: "Absolutely. API integration is one of our core services. We've connected hundreds of third-party services and can work with virtually any system that has an API or data export capability." },
 ];
 
-// ─── SVG LOGO — faithful recreation of the circuit-S mark ────────────
 function SIOLogo({ size = 36, showText = false }) {
-  const id = `g${size}`;
+  const id = "g" + size;
   return (
     <div style={{ display: "flex", alignItems: "center", gap: "0.55rem" }}>
       <svg width={size} height={size} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
         <defs>
-          <linearGradient id={`${id}a`} x1="20" y1="10" x2="80" y2="90" gradientUnits="userSpaceOnUse">
+          <linearGradient id={id + "a"} x1="20" y1="10" x2="80" y2="90" gradientUnits="userSpaceOnUse">
             <stop offset="0%" stopColor="#4FC3F7" />
             <stop offset="45%" stopColor="#00f5d4" />
             <stop offset="100%" stopColor="#1565C0" />
           </linearGradient>
-          <filter id={`${id}glow`} x="-50%" y="-50%" width="200%" height="200%">
+          <filter id={id + "glow"} x="-50%" y="-50%" width="200%" height="200%">
             <feGaussianBlur stdDeviation="2.5" result="blur" />
             <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
           </filter>
         </defs>
-        {/* Upper arc of S */}
-        <path d="M60 14 C76 14 84 26 78 37 C72 48 57 49 50 50" stroke={`url(#${id}a)`} strokeWidth="6.5" strokeLinecap="round" fill="none" />
-        {/* Lower arc of S */}
-        <path d="M40 86 C24 86 16 74 22 63 C28 52 43 51 50 50" stroke={`url(#${id}a)`} strokeWidth="6.5" strokeLinecap="round" fill="none" />
-        {/* Center glowing node */}
-        <circle cx="50" cy="50" r="6" fill="#00f5d4" filter={`url(#${id}glow)`} opacity="0.85" />
+        <path d="M60 14 C76 14 84 26 78 37 C72 48 57 49 50 50" stroke={"url(#" + id + "a)"} strokeWidth="6.5" strokeLinecap="round" fill="none" />
+        <path d="M40 86 C24 86 16 74 22 63 C28 52 43 51 50 50" stroke={"url(#" + id + "a)"} strokeWidth="6.5" strokeLinecap="round" fill="none" />
+        <circle cx="50" cy="50" r="6" fill="#00f5d4" filter={"url(#" + id + "glow)"} opacity="0.85" />
         <circle cx="50" cy="50" r="3.5" fill="#fff" />
-        {/* Terminal nodes */}
         <circle cx="60" cy="14" r="4.5" fill="none" stroke="#4FC3F7" strokeWidth="2.5" />
         <circle cx="40" cy="86" r="4.5" fill="none" stroke="#4FC3F7" strokeWidth="2.5" />
-        {/* Branch endpoints upper-right */}
         <circle cx="80" cy="26" r="3.5" fill="none" stroke="#00f5d4" strokeWidth="2" />
         <line x1="80" y1="26" x2="92" y2="20" stroke="#1565C0" strokeWidth="2" strokeLinecap="round" />
         <line x1="80" y1="26" x2="92" y2="32" stroke="#1565C0" strokeWidth="2" strokeLinecap="round" />
-        {/* Branch endpoints lower-left */}
         <circle cx="20" cy="74" r="3.5" fill="none" stroke="#00f5d4" strokeWidth="2" />
         <line x1="20" y1="74" x2="8" y2="68" stroke="#1565C0" strokeWidth="2" strokeLinecap="round" />
         <line x1="20" y1="74" x2="8" y2="80" stroke="#1565C0" strokeWidth="2" strokeLinecap="round" />
@@ -109,7 +103,7 @@ function SIOLogo({ size = 36, showText = false }) {
   );
 }
 
-function useCountUp(target, duration = 1800, start = false) {
+function useCountUp(target, duration, start) {
   const [count, setCount] = useState(0);
   useEffect(() => {
     if (!start) return;
@@ -121,7 +115,7 @@ function useCountUp(target, duration = 1800, start = false) {
       if (p < 1) requestAnimationFrame(step);
     };
     requestAnimationFrame(step);
-  }, [target, duration, start]);
+  }, [start]);
   return count;
 }
 
@@ -155,7 +149,7 @@ function Navbar() {
     window.addEventListener("scroll", fn);
     return () => window.removeEventListener("scroll", fn);
   }, []);
-  const go = (id) => { document.getElementById(id)?.scrollIntoView({ behavior: "smooth" }); setOpen(false); };
+  const go = (id) => { document.getElementById(id) && document.getElementById(id).scrollIntoView({ behavior: "smooth" }); setOpen(false); };
   return (
     <nav style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 1000, transition: "all 0.3s", background: scrolled ? "rgba(2,6,23,0.94)" : "transparent", backdropFilter: scrolled ? "blur(22px)" : "none", borderBottom: scrolled ? "1px solid rgba(0,245,212,0.07)" : "none", padding: "0 2rem" }}>
       <div style={{ maxWidth: 1200, margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "space-between", height: 70 }}>
@@ -163,14 +157,14 @@ function Navbar() {
         <div className="desktop-nav" style={{ display: "flex", gap: "1.75rem", alignItems: "center" }}>
           {NAV_LINKS.map(l => (
             <button key={l} onClick={() => go(l.toLowerCase().replace(" ", "-"))}
-              style={{ background: "none", border: "none", color: "#94a3b8", fontSize: "0.875rem", cursor: "pointer", fontFamily: "'DM Sans', sans-serif", transition: "color 0.2s", letterSpacing: "0.01em" }}
-              onMouseEnter={e => e.target.style.color = "#00f5d4"} onMouseLeave={e => e.target.style.color = "#94a3b8"}>{l}
+              style={{ background: "none", border: "none", color: "#94a3b8", fontSize: "0.875rem", cursor: "pointer", fontFamily: "'DM Sans', sans-serif", transition: "color 0.2s" }}
+              onMouseEnter={e => { e.target.style.color = "#00f5d4"; }} onMouseLeave={e => { e.target.style.color = "#94a3b8"; }}>{l}
             </button>
           ))}
           <button onClick={() => window.open(COMPANY.whatsappLink, "_blank")}
             style={{ background: "linear-gradient(135deg, #00f5d4, #0ea5e9)", border: "none", borderRadius: 8, padding: "0.5rem 1.2rem", color: "#000", fontWeight: 700, fontSize: "0.875rem", cursor: "pointer", fontFamily: "'DM Sans', sans-serif", transition: "all 0.2s" }}
-            onMouseEnter={e => { e.currentTarget.style.opacity = "0.85"; e.currentTarget.style.transform = "translateY(-1px)"; }}
-            onMouseLeave={e => { e.currentTarget.style.opacity = "1"; e.currentTarget.style.transform = "translateY(0)"; }}>
+            onMouseEnter={e => { e.currentTarget.style.opacity = "0.85"; }}
+            onMouseLeave={e => { e.currentTarget.style.opacity = "1"; }}>
             Get Started
           </button>
         </div>
@@ -200,12 +194,11 @@ function HeroSection() {
   const [idx, setIdx] = useState(0);
   const [fade, setFade] = useState(true);
   useEffect(() => {
-    const interval = setInterval(() => {
+    const t = setInterval(() => {
       setFade(false);
-      setTimeout(() => { setWordIdx(i => (i + 1) % words.length); setFade(true); }, 400);
+      setTimeout(() => { setIdx(function(i) { return (i + 1) % words.length; }); setFade(true); }, 380);
     }, 2800);
-    return () => clearInterval(interval);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    return () => clearInterval(t);
   }, []);
   return (
     <section id="hero" style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", textAlign: "center", padding: "8rem 2rem 4rem", position: "relative" }}>
@@ -225,15 +218,11 @@ function HeroSection() {
         </p>
         <div style={{ display: "flex", gap: "1rem", justifyContent: "center", flexWrap: "wrap" }}>
           <a href={COMPANY.whatsappLink} target="_blank" rel="noreferrer"
-            style={{ background: "linear-gradient(135deg, #25D366, #128C7E)", border: "none", borderRadius: 10, padding: "0.9rem 1.8rem", color: "#fff", fontWeight: 700, fontSize: "1rem", cursor: "pointer", fontFamily: "'DM Sans', sans-serif", boxShadow: "0 0 30px rgba(37,211,102,0.25)", display: "flex", alignItems: "center", gap: "0.5rem", textDecoration: "none", transition: "all 0.2s" }}
-            onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = "0 0 50px rgba(37,211,102,0.4)"; }}
-            onMouseLeave={e => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "0 0 30px rgba(37,211,102,0.25)"; }}>
+            style={{ background: "linear-gradient(135deg, #25D366, #128C7E)", border: "none", borderRadius: 10, padding: "0.9rem 1.8rem", color: "#fff", fontWeight: 700, fontSize: "1rem", cursor: "pointer", fontFamily: "'DM Sans', sans-serif", boxShadow: "0 0 30px rgba(37,211,102,0.25)", display: "flex", alignItems: "center", gap: "0.5rem", textDecoration: "none", transition: "all 0.2s" }}>
             💬 WhatsApp Us
           </a>
-          <button onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })}
-            style={{ background: "linear-gradient(135deg, #00f5d4, #0ea5e9)", border: "none", borderRadius: 10, padding: "0.9rem 1.8rem", color: "#000", fontWeight: 700, fontSize: "1rem", cursor: "pointer", fontFamily: "'DM Sans', sans-serif", transition: "all 0.2s", boxShadow: "0 0 30px rgba(0,245,212,0.25)" }}
-            onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = "0 0 50px rgba(0,245,212,0.45)"; }}
-            onMouseLeave={e => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "0 0 30px rgba(0,245,212,0.25)"; }}>
+          <button onClick={() => { var el = document.getElementById("contact"); if(el) el.scrollIntoView({ behavior: "smooth" }); }}
+            style={{ background: "linear-gradient(135deg, #00f5d4, #0ea5e9)", border: "none", borderRadius: 10, padding: "0.9rem 1.8rem", color: "#000", fontWeight: 700, fontSize: "1rem", cursor: "pointer", fontFamily: "'DM Sans', sans-serif", transition: "all 0.2s", boxShadow: "0 0 30px rgba(0,245,212,0.25)" }}>
             Book a Consultation →
           </button>
         </div>
@@ -244,10 +233,6 @@ function HeroSection() {
             </div>
           ))}
         </div>
-      </div>
-      <div style={{ position: "absolute", bottom: "3rem", left: "50%", animation: "bounce 2s ease-in-out infinite" }}>
-        <div style={{ width: 1, height: 48, background: "linear-gradient(to bottom, transparent, rgba(0,245,212,0.45))", margin: "0 auto" }} />
-        <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#00f5d4", margin: "4px auto 0" }} />
       </div>
     </section>
   );
@@ -266,19 +251,20 @@ function AboutSection() {
             SIO Technologies — <em>Seamless Intelligence Operations</em> — was founded with one mission: to give businesses access to the same caliber of technology that powers the world's most successful companies, regardless of their size.
           </p>
           <p style={{ color: "#94a3b8", lineHeight: 1.8, fontFamily: "'DM Sans', sans-serif", fontSize: "1rem", marginBottom: "2rem" }}>
-            Based in Motihari, Bihar, we're a team of engineers, AI researchers, and product designers obsessed with building systems that are fast, beautiful, and built to last. From early-stage startups to scaling enterprises, we architect technology that becomes a genuine competitive advantage.
+            Based in Motihari, Bihar, we're a team of engineers, AI researchers, and product designers obsessed with building systems that are fast, beautiful, and built to last.
           </p>
           <div style={{ display: "flex", gap: "2.5rem" }}>
-            {[["6+", "Years"], ["120+", "Projects"], ["40+", "Clients"]].map(([n, l]) => (
-              <div key={l}>
-                <div style={{ fontFamily: "'Space Grotesk', sans-serif", fontWeight: 800, fontSize: "2rem", color: "#00f5d4" }}>{n}</div>
-                <div style={{ color: "#64748b", fontSize: "0.75rem", textTransform: "uppercase", letterSpacing: "0.1em", fontFamily: "'DM Sans', sans-serif" }}>{l}</div>
-              </div>
-            ))}
+            {[["6+", "Years"], ["120+", "Projects"], ["40+", "Clients"]].map(function(item) {
+              return (
+                <div key={item[1]}>
+                  <div style={{ fontFamily: "'Space Grotesk', sans-serif", fontWeight: 800, fontSize: "2rem", color: "#00f5d4" }}>{item[0]}</div>
+                  <div style={{ color: "#64748b", fontSize: "0.75rem", textTransform: "uppercase", letterSpacing: "0.1em", fontFamily: "'DM Sans', sans-serif" }}>{item[1]}</div>
+                </div>
+              );
+            })}
           </div>
         </div>
         <div style={{ position: "relative" }}>
-          {/* Logo showcase */}
           <div style={{ background: "linear-gradient(135deg, rgba(0,245,212,0.05), rgba(124,58,237,0.06))", border: "1px solid rgba(0,245,212,0.12)", borderRadius: 24, padding: "2.5rem", backdropFilter: "blur(20px)", textAlign: "center", marginBottom: "1.25rem" }}>
             <SIOLogo size={90} />
             <div style={{ marginTop: "1.25rem" }}>
@@ -287,17 +273,20 @@ function AboutSection() {
             </div>
           </div>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.875rem" }}>
-            {[{ title: "AI-First Mindset", icon: "🧠", desc: "Every solution is designed with AI augmentation at its core." },
-              { title: "Full-Stack Team", icon: "⚡", desc: "From backend infra to pixel-perfect UI — all in-house." },
+            {[
+              { title: "AI-First Mindset", icon: "🧠", desc: "Every solution is designed with AI at its core." },
+              { title: "Full-Stack Team", icon: "⚡", desc: "From backend to pixel-perfect UI — all in-house." },
               { title: "Product Thinking", icon: "🎯", desc: "We solve business problems, not just write code." },
-              { title: "Radical Transparency", icon: "🔍", desc: "Clear pricing, real timelines, and honest updates — always." }
-            ].map(({ title, icon, desc }) => (
-              <div key={title} style={{ background: "rgba(255,255,255,0.025)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 12, padding: "1.1rem" }}>
-                <div style={{ fontSize: "1.4rem", marginBottom: "0.4rem" }}>{icon}</div>
-                <div style={{ fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700, color: "#e2e8f0", fontSize: "0.875rem", marginBottom: "0.35rem" }}>{title}</div>
-                <div style={{ color: "#64748b", fontSize: "0.78rem", lineHeight: 1.5, fontFamily: "'DM Sans', sans-serif" }}>{desc}</div>
-              </div>
-            ))}
+              { title: "Radical Transparency", icon: "🔍", desc: "Clear pricing, real timelines — always." }
+            ].map(function(item) {
+              return (
+                <div key={item.title} style={{ background: "rgba(255,255,255,0.025)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 12, padding: "1.1rem" }}>
+                  <div style={{ fontSize: "1.4rem", marginBottom: "0.4rem" }}>{item.icon}</div>
+                  <div style={{ fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700, color: "#e2e8f0", fontSize: "0.875rem", marginBottom: "0.35rem" }}>{item.title}</div>
+                  <div style={{ color: "#64748b", fontSize: "0.78rem", lineHeight: 1.5, fontFamily: "'DM Sans', sans-serif" }}>{item.desc}</div>
+                </div>
+              );
+            })}
           </div>
         </div>
       </div>
@@ -315,22 +304,21 @@ function ServicesSection() {
           <h2 style={{ fontFamily: "'Space Grotesk', sans-serif", fontWeight: 800, fontSize: "clamp(2rem, 4vw, 3rem)", color: "#fff", lineHeight: 1.1, letterSpacing: "-0.02em", marginBottom: "1rem" }}>
             Services Built for the<br /><span style={{ background: "linear-gradient(135deg, #00f5d4, #7c3aed)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>Modern Enterprise</span>
           </h2>
-          <p style={{ color: "#64748b", maxWidth: 480, margin: "0 auto", fontFamily: "'DM Sans', sans-serif", lineHeight: 1.7, fontSize: "0.95rem" }}>
-            Six core service lines engineered to deliver measurable business outcomes.
-          </p>
         </div>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(310px, 1fr))", gap: "1.1rem" }}>
-          {SERVICES.map((s, i) => (
-            <div key={s.title} onMouseEnter={() => setHov(i)} onMouseLeave={() => setHov(null)}
-              style={{ background: hov === i ? "rgba(0,245,212,0.035)" : "rgba(255,255,255,0.02)", border: `1px solid ${hov === i ? "rgba(0,245,212,0.22)" : "rgba(255,255,255,0.06)"}`, borderRadius: 16, padding: "1.85rem", transition: "all 0.28s", transform: hov === i ? "translateY(-4px)" : "none", boxShadow: hov === i ? "0 20px 60px rgba(0,245,212,0.07)" : "none" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "1rem" }}>
-                <div style={{ fontSize: "1.85rem" }}>{s.icon}</div>
-                <span style={{ background: "rgba(0,245,212,0.09)", border: "1px solid rgba(0,245,212,0.18)", borderRadius: 100, padding: "0.18rem 0.65rem", fontSize: "0.68rem", color: "#00f5d4", fontFamily: "'DM Sans', sans-serif", letterSpacing: "0.06em" }}>{s.tag}</span>
+          {SERVICES.map(function(s, i) {
+            return (
+              <div key={s.title} onMouseEnter={() => setHov(i)} onMouseLeave={() => setHov(null)}
+                style={{ background: hov === i ? "rgba(0,245,212,0.035)" : "rgba(255,255,255,0.02)", border: "1px solid " + (hov === i ? "rgba(0,245,212,0.22)" : "rgba(255,255,255,0.06)"), borderRadius: 16, padding: "1.85rem", transition: "all 0.28s", transform: hov === i ? "translateY(-4px)" : "none" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "1rem" }}>
+                  <div style={{ fontSize: "1.85rem" }}>{s.icon}</div>
+                  <span style={{ background: "rgba(0,245,212,0.09)", border: "1px solid rgba(0,245,212,0.18)", borderRadius: 100, padding: "0.18rem 0.65rem", fontSize: "0.68rem", color: "#00f5d4", fontFamily: "'DM Sans', sans-serif" }}>{s.tag}</span>
+                </div>
+                <h3 style={{ fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700, fontSize: "1.15rem", color: "#e2e8f0", marginBottom: "0.65rem" }}>{s.title}</h3>
+                <p style={{ color: "#64748b", lineHeight: 1.7, fontSize: "0.875rem", fontFamily: "'DM Sans', sans-serif", margin: 0 }}>{s.desc}</p>
               </div>
-              <h3 style={{ fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700, fontSize: "1.15rem", color: "#e2e8f0", marginBottom: "0.65rem" }}>{s.title}</h3>
-              <p style={{ color: "#64748b", lineHeight: 1.7, fontSize: "0.875rem", fontFamily: "'DM Sans', sans-serif", margin: 0 }}>{s.desc}</p>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>
@@ -341,18 +329,22 @@ function StatsSection() {
   const ref = useRef(null);
   const [vis, setVis] = useState(false);
   useEffect(() => {
-    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) setVis(true); }, { threshold: 0.3 });
+    const obs = new IntersectionObserver(function(entries) {
+      if (entries[0].isIntersecting) setVis(true);
+    }, { threshold: 0.3 });
     if (ref.current) obs.observe(ref.current);
     return () => obs.disconnect();
   }, []);
   return (
     <section ref={ref} style={{ padding: "4rem 2rem", position: "relative", zIndex: 1 }}>
       <div style={{ maxWidth: 900, margin: "0 auto", background: "linear-gradient(135deg, rgba(0,245,212,0.04), rgba(124,58,237,0.04))", border: "1px solid rgba(0,245,212,0.09)", borderRadius: 24, display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))" }}>
-        {STATS.map((s, i) => (
-          <div key={s.label} style={{ borderRight: i < STATS.length - 1 ? "1px solid rgba(255,255,255,0.05)" : "none" }}>
-            <StatCard {...s} animate={vis} />
-          </div>
-        ))}
+        {STATS.map(function(s, i) {
+          return (
+            <div key={s.label} style={{ borderRight: i < STATS.length - 1 ? "1px solid rgba(255,255,255,0.05)" : "none" }}>
+              <StatCard value={s.value} suffix={s.suffix} label={s.label} animate={vis} />
+            </div>
+          );
+        })}
       </div>
     </section>
   );
@@ -369,15 +361,17 @@ function WhyUsSection() {
           </h2>
         </div>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(190px, 1fr))", gap: "1.25rem" }}>
-          {WHY_US.map((w) => (
-            <div key={w.title} style={{ textAlign: "center", padding: "2rem 1.25rem", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, transition: "all 0.28s" }}
-              onMouseEnter={e => { e.currentTarget.style.borderColor = "rgba(0,245,212,0.2)"; e.currentTarget.style.background = "rgba(0,245,212,0.03)"; e.currentTarget.style.transform = "translateY(-3px)"; }}
-              onMouseLeave={e => { e.currentTarget.style.borderColor = "rgba(255,255,255,0.06)"; e.currentTarget.style.background = "rgba(255,255,255,0.02)"; e.currentTarget.style.transform = "translateY(0)"; }}>
-              <div style={{ fontSize: "2.3rem", marginBottom: "0.9rem" }}>{w.icon}</div>
-              <h3 style={{ fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700, color: "#e2e8f0", fontSize: "0.95rem", marginBottom: "0.65rem" }}>{w.title}</h3>
-              <p style={{ color: "#64748b", fontSize: "0.845rem", lineHeight: 1.6, fontFamily: "'DM Sans', sans-serif", margin: 0 }}>{w.desc}</p>
-            </div>
-          ))}
+          {WHY_US.map(function(w) {
+            return (
+              <div key={w.title} style={{ textAlign: "center", padding: "2rem 1.25rem", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, transition: "all 0.28s" }}
+                onMouseEnter={e => { e.currentTarget.style.borderColor = "rgba(0,245,212,0.2)"; e.currentTarget.style.transform = "translateY(-3px)"; }}
+                onMouseLeave={e => { e.currentTarget.style.borderColor = "rgba(255,255,255,0.06)"; e.currentTarget.style.transform = "translateY(0)"; }}>
+                <div style={{ fontSize: "2.3rem", marginBottom: "0.9rem" }}>{w.icon}</div>
+                <h3 style={{ fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700, color: "#e2e8f0", fontSize: "0.95rem", marginBottom: "0.65rem" }}>{w.title}</h3>
+                <p style={{ color: "#64748b", fontSize: "0.845rem", lineHeight: 1.6, fontFamily: "'DM Sans', sans-serif", margin: 0 }}>{w.desc}</p>
+              </div>
+            );
+          })}
         </div>
       </div>
     </section>
@@ -396,18 +390,19 @@ function PortfolioSection() {
           </h2>
         </div>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(310px, 1fr))", gap: "1.1rem" }}>
-          {PORTFOLIO.map((p, i) => (
-            <div key={p.title} onMouseEnter={() => setHov(i)} onMouseLeave={() => setHov(null)}
-              style={{ position: "relative", overflow: "hidden", borderRadius: 16, border: `1px solid ${hov === i ? p.color + "44" : "rgba(255,255,255,0.06)"}`, background: "rgba(255,255,255,0.02)", transition: "all 0.35s", transform: hov === i ? "translateY(-6px)" : "none", boxShadow: hov === i ? `0 28px 60px ${p.color}14` : "none", minHeight: 210, padding: "1.85rem" }}>
-              <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 3, background: `linear-gradient(90deg, ${p.color}, transparent)`, opacity: hov === i ? 1 : 0, transition: "opacity 0.28s" }} />
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem" }}>
-                <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "0.72rem", color: p.color, background: p.color + "14", border: `1px solid ${p.color}28`, borderRadius: 100, padding: "0.18rem 0.65rem", letterSpacing: "0.06em" }}>{p.category}</span>
-                <div style={{ width: 38, height: 38, borderRadius: 10, background: p.color + "14", border: `1px solid ${p.color}28`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1.1rem" }}>⬡</div>
+          {PORTFOLIO.map(function(p, i) {
+            return (
+              <div key={p.title} onMouseEnter={() => setHov(i)} onMouseLeave={() => setHov(null)}
+                style={{ position: "relative", overflow: "hidden", borderRadius: 16, border: "1px solid " + (hov === i ? p.color + "44" : "rgba(255,255,255,0.06)"), background: "rgba(255,255,255,0.02)", transition: "all 0.35s", transform: hov === i ? "translateY(-6px)" : "none", minHeight: 210, padding: "1.85rem" }}>
+                <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 3, background: "linear-gradient(90deg, " + p.color + ", transparent)", opacity: hov === i ? 1 : 0, transition: "opacity 0.28s" }} />
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem" }}>
+                  <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "0.72rem", color: p.color, background: p.color + "14", border: "1px solid " + p.color + "28", borderRadius: 100, padding: "0.18rem 0.65rem" }}>{p.category}</span>
+                </div>
+                <h3 style={{ fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700, color: "#e2e8f0", fontSize: "1.2rem", marginBottom: "0.65rem" }}>{p.title}</h3>
+                <p style={{ color: "#64748b", fontSize: "0.845rem", lineHeight: 1.7, fontFamily: "'DM Sans', sans-serif", margin: 0 }}>{p.desc}</p>
               </div>
-              <h3 style={{ fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700, color: "#e2e8f0", fontSize: "1.2rem", marginBottom: "0.65rem" }}>{p.title}</h3>
-              <p style={{ color: "#64748b", fontSize: "0.845rem", lineHeight: 1.7, fontFamily: "'DM Sans', sans-serif", margin: 0 }}>{p.desc}</p>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>
@@ -425,21 +420,23 @@ function TestimonialsSection() {
           </h2>
         </div>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(270px, 1fr))", gap: "1.1rem" }}>
-          {TESTIMONIALS.map((t) => (
-            <div key={t.name} style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, padding: "1.85rem", transition: "all 0.28s" }}
-              onMouseEnter={e => { e.currentTarget.style.borderColor = "rgba(0,245,212,0.15)"; e.currentTarget.style.background = "rgba(0,245,212,0.02)"; }}
-              onMouseLeave={e => { e.currentTarget.style.borderColor = "rgba(255,255,255,0.06)"; e.currentTarget.style.background = "rgba(255,255,255,0.02)"; }}>
-              <div style={{ color: "#00f5d4", fontSize: "1.1rem", marginBottom: "0.9rem" }}>{"★".repeat(t.rating)}</div>
-              <p style={{ color: "#94a3b8", lineHeight: 1.75, fontFamily: "'DM Sans', sans-serif", fontSize: "0.875rem", marginBottom: "1.4rem", fontStyle: "italic" }}>"{t.text}"</p>
-              <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
-                <div style={{ width: 42, height: 42, borderRadius: "50%", background: "linear-gradient(135deg, #00f5d4, #7c3aed)", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700, fontSize: "0.8rem", color: "#000", flexShrink: 0 }}>{t.avatar}</div>
-                <div>
-                  <div style={{ fontFamily: "'Space Grotesk', sans-serif", fontWeight: 600, color: "#e2e8f0", fontSize: "0.875rem" }}>{t.name}</div>
-                  <div style={{ color: "#64748b", fontSize: "0.775rem", fontFamily: "'DM Sans', sans-serif" }}>{t.role}</div>
+          {TESTIMONIALS.map(function(t) {
+            return (
+              <div key={t.name} style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, padding: "1.85rem", transition: "all 0.28s" }}
+                onMouseEnter={e => { e.currentTarget.style.borderColor = "rgba(0,245,212,0.15)"; }}
+                onMouseLeave={e => { e.currentTarget.style.borderColor = "rgba(255,255,255,0.06)"; }}>
+                <div style={{ color: "#00f5d4", fontSize: "1.1rem", marginBottom: "0.9rem" }}>{"★".repeat(t.rating)}</div>
+                <p style={{ color: "#94a3b8", lineHeight: 1.75, fontFamily: "'DM Sans', sans-serif", fontSize: "0.875rem", marginBottom: "1.4rem", fontStyle: "italic" }}>"{t.text}"</p>
+                <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
+                  <div style={{ width: 42, height: 42, borderRadius: "50%", background: "linear-gradient(135deg, #00f5d4, #7c3aed)", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700, fontSize: "0.8rem", color: "#000", flexShrink: 0 }}>{t.avatar}</div>
+                  <div>
+                    <div style={{ fontFamily: "'Space Grotesk', sans-serif", fontWeight: 600, color: "#e2e8f0", fontSize: "0.875rem" }}>{t.name}</div>
+                    <div style={{ color: "#64748b", fontSize: "0.775rem", fontFamily: "'DM Sans', sans-serif" }}>{t.role}</div>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>
@@ -458,15 +455,17 @@ function FAQSection() {
           </h2>
         </div>
         <div style={{ display: "flex", flexDirection: "column", gap: "0.7rem" }}>
-          {FAQ.map((f, i) => (
-            <div key={i} style={{ background: "rgba(255,255,255,0.02)", border: `1px solid ${open === i ? "rgba(0,245,212,0.2)" : "rgba(255,255,255,0.06)"}`, borderRadius: 12, overflow: "hidden", transition: "border-color 0.25s" }}>
-              <button onClick={() => setOpen(open === i ? null : i)} style={{ width: "100%", background: "none", border: "none", padding: "1.2rem 1.5rem", display: "flex", justifyContent: "space-between", alignItems: "center", cursor: "pointer", color: "#e2e8f0", fontFamily: "'Space Grotesk', sans-serif", fontWeight: 600, fontSize: "0.92rem", textAlign: "left", gap: "1rem" }}>
-                <span>{f.q}</span>
-                <span style={{ color: "#00f5d4", fontSize: "1.4rem", transition: "transform 0.28s", transform: open === i ? "rotate(45deg)" : "none", flexShrink: 0, lineHeight: 1 }}>+</span>
-              </button>
-              {open === i && <div style={{ padding: "0 1.5rem 1.2rem", color: "#64748b", fontFamily: "'DM Sans', sans-serif", lineHeight: 1.72, fontSize: "0.875rem" }}>{f.a}</div>}
-            </div>
-          ))}
+          {FAQ.map(function(f, i) {
+            return (
+              <div key={i} style={{ background: "rgba(255,255,255,0.02)", border: "1px solid " + (open === i ? "rgba(0,245,212,0.2)" : "rgba(255,255,255,0.06)"), borderRadius: 12, overflow: "hidden", transition: "border-color 0.25s" }}>
+                <button onClick={() => setOpen(open === i ? null : i)} style={{ width: "100%", background: "none", border: "none", padding: "1.2rem 1.5rem", display: "flex", justifyContent: "space-between", alignItems: "center", cursor: "pointer", color: "#e2e8f0", fontFamily: "'Space Grotesk', sans-serif", fontWeight: 600, fontSize: "0.92rem", textAlign: "left", gap: "1rem" }}>
+                  <span>{f.q}</span>
+                  <span style={{ color: "#00f5d4", fontSize: "1.4rem", transition: "transform 0.28s", transform: open === i ? "rotate(45deg)" : "none", flexShrink: 0, lineHeight: 1 }}>+</span>
+                </button>
+                {open === i && <div style={{ padding: "0 1.5rem 1.2rem", color: "#64748b", fontFamily: "'DM Sans', sans-serif", lineHeight: 1.72, fontSize: "0.875rem" }}>{f.a}</div>}
+              </div>
+            );
+          })}
         </div>
       </div>
     </section>
@@ -476,7 +475,7 @@ function FAQSection() {
 function ContactSection() {
   const [form, setForm] = useState({ name: "", email: "", company: "", message: "" });
   const [sent, setSent] = useState(false);
-  const handle = (e) => setForm({ ...form, [e.target.name]: e.target.value });
+  const handle = (e) => setForm(Object.assign({}, form, { [e.target.name]: e.target.value }));
   const iStyle = { width: "100%", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 10, padding: "0.85rem 1rem", color: "#e2e8f0", fontFamily: "'DM Sans', sans-serif", fontSize: "0.92rem", outline: "none", boxSizing: "border-box", transition: "border-color 0.2s" };
   const socials = [
     { label: "WhatsApp", color: "#25D366", icon: "💬", href: COMPANY.whatsappLink },
@@ -496,28 +495,25 @@ function ContactSection() {
           <div>
             <h3 style={{ fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700, color: "#e2e8f0", marginBottom: "1.5rem", fontSize: "1.2rem" }}>Contact Information</h3>
             {[
-              { icon: "✉️", label: "Email", value: COMPANY.email, href: `mailto:${COMPANY.email}` },
+              { icon: "✉️", label: "Email", value: COMPANY.email, href: "mailto:" + COMPANY.email },
               { icon: "💬", label: "WhatsApp", value: COMPANY.whatsapp, href: COMPANY.whatsappLink },
               { icon: "📍", label: "Location", value: COMPANY.location, href: null },
-            ].map(c => (
-              <div key={c.label} style={{ display: "flex", gap: "1rem", alignItems: "flex-start", marginBottom: "1.4rem" }}>
-                <div style={{ width: 44, height: 44, borderRadius: 10, background: "rgba(0,245,212,0.09)", border: "1px solid rgba(0,245,212,0.18)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1.1rem", flexShrink: 0 }}>{c.icon}</div>
-                <div>
-                  <div style={{ color: "#64748b", fontSize: "0.75rem", fontFamily: "'DM Sans', sans-serif", marginBottom: "0.2rem", textTransform: "uppercase", letterSpacing: "0.06em" }}>{c.label}</div>
-                  {c.href
-                    ? <a href={c.href} target="_blank" rel="noreferrer" style={{ color: "#00f5d4", fontFamily: "'DM Sans', sans-serif", fontWeight: 500, textDecoration: "none", fontSize: "0.92rem" }}
-                        onMouseEnter={e => e.currentTarget.style.textDecoration = "underline"}
-                        onMouseLeave={e => e.currentTarget.style.textDecoration = "none"}>{c.value}</a>
-                    : <div style={{ color: "#e2e8f0", fontFamily: "'DM Sans', sans-serif", fontWeight: 500, fontSize: "0.92rem" }}>{c.value}</div>
-                  }
+            ].map(function(c) {
+              return (
+                <div key={c.label} style={{ display: "flex", gap: "1rem", alignItems: "flex-start", marginBottom: "1.4rem" }}>
+                  <div style={{ width: 44, height: 44, borderRadius: 10, background: "rgba(0,245,212,0.09)", border: "1px solid rgba(0,245,212,0.18)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1.1rem", flexShrink: 0 }}>{c.icon}</div>
+                  <div>
+                    <div style={{ color: "#64748b", fontSize: "0.75rem", fontFamily: "'DM Sans', sans-serif", marginBottom: "0.2rem", textTransform: "uppercase", letterSpacing: "0.06em" }}>{c.label}</div>
+                    {c.href
+                      ? <a href={c.href} target="_blank" rel="noreferrer" style={{ color: "#00f5d4", fontFamily: "'DM Sans', sans-serif", fontWeight: 500, textDecoration: "none", fontSize: "0.92rem" }}>{c.value}</a>
+                      : <div style={{ color: "#e2e8f0", fontFamily: "'DM Sans', sans-serif", fontWeight: 500, fontSize: "0.92rem" }}>{c.value}</div>
+                    }
+                  </div>
                 </div>
-              </div>
-            ))}
-            {/* WhatsApp CTA button */}
+              );
+            })}
             <a href={COMPANY.whatsappLink} target="_blank" rel="noreferrer"
-              style={{ display: "flex", alignItems: "center", gap: "0.85rem", background: "linear-gradient(135deg, #25D366, #128C7E)", borderRadius: 12, padding: "1rem 1.4rem", textDecoration: "none", marginBottom: "1.5rem", marginTop: "0.5rem", transition: "all 0.2s" }}
-              onMouseEnter={e => { e.currentTarget.style.opacity = "0.88"; e.currentTarget.style.transform = "translateY(-2px)"; }}
-              onMouseLeave={e => { e.currentTarget.style.opacity = "1"; e.currentTarget.style.transform = "translateY(0)"; }}>
+              style={{ display: "flex", alignItems: "center", gap: "0.85rem", background: "linear-gradient(135deg, #25D366, #128C7E)", borderRadius: 12, padding: "1rem 1.4rem", textDecoration: "none", marginBottom: "1.5rem", marginTop: "0.5rem", transition: "all 0.2s" }}>
               <span style={{ fontSize: "1.4rem" }}>💬</span>
               <div>
                 <div style={{ color: "#fff", fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700, fontSize: "0.92rem" }}>Chat on WhatsApp</div>
@@ -526,14 +522,14 @@ function ContactSection() {
             </a>
             <div style={{ color: "#475569", fontSize: "0.75rem", fontFamily: "'DM Sans', sans-serif", marginBottom: "0.75rem", letterSpacing: "0.08em", textTransform: "uppercase" }}>Follow Us</div>
             <div style={{ display: "flex", gap: "0.7rem" }}>
-              {socials.map(s => (
-                <a key={s.label} href={s.href} target="_blank" rel="noreferrer" title={s.label}
-                  style={{ width: 46, height: 46, borderRadius: 10, background: s.color + "14", border: `1px solid ${s.color}38`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: s.icon.length > 2 ? "1.1rem" : "0.85rem", color: s.color, fontWeight: 800, fontFamily: "sans-serif", transition: "all 0.2s", textDecoration: "none" }}
-                  onMouseEnter={e => { e.currentTarget.style.background = s.color + "2a"; e.currentTarget.style.transform = "translateY(-2px)"; }}
-                  onMouseLeave={e => { e.currentTarget.style.background = s.color + "14"; e.currentTarget.style.transform = "translateY(0)"; }}>
-                  {s.icon}
-                </a>
-              ))}
+              {socials.map(function(s) {
+                return (
+                  <a key={s.label} href={s.href} target="_blank" rel="noreferrer" title={s.label}
+                    style={{ width: 46, height: 46, borderRadius: 10, background: s.color + "14", border: "1px solid " + s.color + "38", display: "flex", alignItems: "center", justifyContent: "center", fontSize: s.icon.length > 2 ? "1.1rem" : "0.85rem", color: s.color, fontWeight: 800, fontFamily: "sans-serif", transition: "all 0.2s", textDecoration: "none" }}>
+                    {s.icon}
+                  </a>
+                );
+              })}
             </div>
           </div>
           <div style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 20, padding: "2.25rem" }}>
@@ -541,44 +537,42 @@ function ContactSection() {
               <div style={{ textAlign: "center", padding: "2rem 0" }}>
                 <div style={{ fontSize: "3.5rem", marginBottom: "1rem" }}>✅</div>
                 <h3 style={{ fontFamily: "'Space Grotesk', sans-serif", color: "#00f5d4", fontWeight: 700, marginBottom: "0.65rem", fontSize: "1.4rem" }}>Message Sent!</h3>
-                <p style={{ color: "#64748b", fontFamily: "'DM Sans', sans-serif", lineHeight: 1.65, fontSize: "0.92rem" }}>We'll reply within 24 hours.<br />For faster response, reach us on WhatsApp.</p>
+                <p style={{ color: "#64748b", fontFamily: "'DM Sans', sans-serif", lineHeight: 1.65, fontSize: "0.92rem" }}>We'll reply within 24 hours.</p>
                 <a href={COMPANY.whatsappLink} target="_blank" rel="noreferrer"
                   style={{ display: "inline-block", marginTop: "1.5rem", background: "#25D366", borderRadius: 10, padding: "0.75rem 1.5rem", color: "#fff", fontWeight: 700, textDecoration: "none", fontFamily: "'DM Sans', sans-serif", fontSize: "0.92rem" }}>
                   💬 Open WhatsApp
                 </a>
               </div>
             ) : (
-              <form onSubmit={(e) => { e.preventDefault(); setSent(true); }}>
+              <form onSubmit={function(e) { e.preventDefault(); setSent(true); }}>
                 <h3 style={{ fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700, color: "#e2e8f0", marginBottom: "1.4rem", fontSize: "1.05rem" }}>Send Us a Message</h3>
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.85rem", marginBottom: "0.85rem" }}>
                   <div>
                     <label style={{ display: "block", color: "#64748b", fontSize: "0.75rem", fontFamily: "'DM Sans', sans-serif", marginBottom: "0.4rem", textTransform: "uppercase", letterSpacing: "0.06em" }}>Your Name *</label>
                     <input name="name" value={form.name} onChange={handle} placeholder="Your name" required style={iStyle}
-                      onFocus={e => e.target.style.borderColor = "rgba(0,245,212,0.38)"} onBlur={e => e.target.style.borderColor = "rgba(255,255,255,0.1)"} />
+                      onFocus={e => { e.target.style.borderColor = "rgba(0,245,212,0.38)"; }} onBlur={e => { e.target.style.borderColor = "rgba(255,255,255,0.1)"; }} />
                   </div>
                   <div>
                     <label style={{ display: "block", color: "#64748b", fontSize: "0.75rem", fontFamily: "'DM Sans', sans-serif", marginBottom: "0.4rem", textTransform: "uppercase", letterSpacing: "0.06em" }}>Email *</label>
                     <input name="email" type="email" value={form.email} onChange={handle} placeholder="you@email.com" required style={iStyle}
-                      onFocus={e => e.target.style.borderColor = "rgba(0,245,212,0.38)"} onBlur={e => e.target.style.borderColor = "rgba(255,255,255,0.1)"} />
+                      onFocus={e => { e.target.style.borderColor = "rgba(0,245,212,0.38)"; }} onBlur={e => { e.target.style.borderColor = "rgba(255,255,255,0.1)"; }} />
                   </div>
                 </div>
                 <div style={{ marginBottom: "0.85rem" }}>
                   <label style={{ display: "block", color: "#64748b", fontSize: "0.75rem", fontFamily: "'DM Sans', sans-serif", marginBottom: "0.4rem", textTransform: "uppercase", letterSpacing: "0.06em" }}>Company (optional)</label>
                   <input name="company" value={form.company} onChange={handle} placeholder="Your company" style={iStyle}
-                    onFocus={e => e.target.style.borderColor = "rgba(0,245,212,0.38)"} onBlur={e => e.target.style.borderColor = "rgba(255,255,255,0.1)"} />
+                    onFocus={e => { e.target.style.borderColor = "rgba(0,245,212,0.38)"; }} onBlur={e => { e.target.style.borderColor = "rgba(255,255,255,0.1)"; }} />
                 </div>
                 <div style={{ marginBottom: "1.4rem" }}>
                   <label style={{ display: "block", color: "#64748b", fontSize: "0.75rem", fontFamily: "'DM Sans', sans-serif", marginBottom: "0.4rem", textTransform: "uppercase", letterSpacing: "0.06em" }}>Your Project *</label>
-                  <textarea name="message" value={form.message} onChange={handle} placeholder="Tell us what you want to build..." required rows={4} style={{ ...iStyle, resize: "vertical", minHeight: 105 }}
-                    onFocus={e => e.target.style.borderColor = "rgba(0,245,212,0.38)"} onBlur={e => e.target.style.borderColor = "rgba(255,255,255,0.1)"} />
+                  <textarea name="message" value={form.message} onChange={handle} placeholder="Tell us what you want to build..." required rows={4} style={Object.assign({}, iStyle, { resize: "vertical", minHeight: 105 })}
+                    onFocus={e => { e.target.style.borderColor = "rgba(0,245,212,0.38)"; }} onBlur={e => { e.target.style.borderColor = "rgba(255,255,255,0.1)"; }} />
                 </div>
-                <button type="submit" style={{ width: "100%", background: "linear-gradient(135deg, #00f5d4, #0ea5e9)", border: "none", borderRadius: 10, padding: "0.95rem", color: "#000", fontWeight: 700, fontSize: "0.95rem", cursor: "pointer", fontFamily: "'DM Sans', sans-serif", transition: "all 0.2s", boxShadow: "0 0 28px rgba(0,245,212,0.18)" }}
-                  onMouseEnter={e => { e.currentTarget.style.opacity = "0.9"; e.currentTarget.style.transform = "translateY(-1px)"; }}
-                  onMouseLeave={e => { e.currentTarget.style.opacity = "1"; e.currentTarget.style.transform = "translateY(0)"; }}>
+                <button type="submit" style={{ width: "100%", background: "linear-gradient(135deg, #00f5d4, #0ea5e9)", border: "none", borderRadius: 10, padding: "0.95rem", color: "#000", fontWeight: 700, fontSize: "0.95rem", cursor: "pointer", fontFamily: "'DM Sans', sans-serif", transition: "all 0.2s" }}>
                   Send Message →
                 </button>
                 <p style={{ color: "#334155", fontSize: "0.72rem", fontFamily: "'DM Sans', sans-serif", textAlign: "center", marginTop: "0.75rem" }}>
-                  Or email directly: <a href={`mailto:${COMPANY.email}`} style={{ color: "#00f5d4", textDecoration: "none" }}>{COMPANY.email}</a>
+                  Or email: <a href={"mailto:" + COMPANY.email} style={{ color: "#00f5d4", textDecoration: "none" }}>{COMPANY.email}</a>
                 </p>
               </form>
             )}
@@ -590,7 +584,7 @@ function ContactSection() {
 }
 
 function Footer() {
-  const go = (id) => document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+  const go = (id) => { var el = document.getElementById(id); if(el) el.scrollIntoView({ behavior: "smooth" }); };
   return (
     <footer style={{ borderTop: "1px solid rgba(255,255,255,0.06)", padding: "4rem 2rem 2rem", position: "relative", zIndex: 1 }}>
       <div style={{ maxWidth: 1200, margin: "0 auto" }}>
@@ -604,17 +598,19 @@ function Footer() {
           </div>
           <div>
             <div style={{ fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700, color: "#e2e8f0", marginBottom: "1rem", fontSize: "0.875rem" }}>Services</div>
-            {["AI Automation", "Website Development", "SaaS Solutions", "API Integrations", "Business Systems"].map(l => (
-              <div key={l} style={{ color: "#64748b", fontSize: "0.845rem", fontFamily: "'DM Sans', sans-serif", marginBottom: "0.55rem" }}>{l}</div>
-            ))}
+            {["AI Automation", "Website Development", "SaaS Solutions", "API Integrations"].map(function(l) {
+              return <div key={l} style={{ color: "#64748b", fontSize: "0.845rem", fontFamily: "'DM Sans', sans-serif", marginBottom: "0.55rem" }}>{l}</div>;
+            })}
           </div>
           <div>
             <div style={{ fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700, color: "#e2e8f0", marginBottom: "1rem", fontSize: "0.875rem" }}>Company</div>
-            {[["About Us", "about"], ["Portfolio", "portfolio"], ["Testimonials", "testimonials"], ["FAQ", "faq"]].map(([l, id]) => (
-              <div key={l} onClick={() => go(id)} style={{ color: "#64748b", fontSize: "0.845rem", fontFamily: "'DM Sans', sans-serif", marginBottom: "0.55rem", cursor: "pointer", transition: "color 0.2s" }}
-                onMouseEnter={e => e.currentTarget.style.color = "#00f5d4"}
-                onMouseLeave={e => e.currentTarget.style.color = "#64748b"}>{l}</div>
-            ))}
+            {[["About Us", "about"], ["Portfolio", "portfolio"], ["Testimonials", "testimonials"], ["FAQ", "faq"]].map(function(item) {
+              return (
+                <div key={item[0]} onClick={() => go(item[1])} style={{ color: "#64748b", fontSize: "0.845rem", fontFamily: "'DM Sans', sans-serif", marginBottom: "0.55rem", cursor: "pointer", transition: "color 0.2s" }}
+                  onMouseEnter={e => { e.currentTarget.style.color = "#00f5d4"; }}
+                  onMouseLeave={e => { e.currentTarget.style.color = "#64748b"; }}>{item[0]}</div>
+              );
+            })}
           </div>
           <div>
             <div style={{ fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700, color: "#e2e8f0", marginBottom: "1rem", fontSize: "0.875rem" }}>Connect</div>
@@ -622,12 +618,14 @@ function Footer() {
               { label: "💬 WhatsApp", href: COMPANY.whatsappLink },
               { label: "📸 Instagram", href: COMPANY.instagram },
               { label: "in LinkedIn", href: COMPANY.linkedin },
-              { label: "✉️ " + COMPANY.email, href: `mailto:${COMPANY.email}` },
-            ].map(l => (
-              <a key={l.label} href={l.href} target="_blank" rel="noreferrer" style={{ display: "block", color: "#64748b", fontSize: "0.845rem", fontFamily: "'DM Sans', sans-serif", marginBottom: "0.55rem", cursor: "pointer", transition: "color 0.2s", textDecoration: "none", wordBreak: "break-all" }}
-                onMouseEnter={e => e.currentTarget.style.color = "#00f5d4"}
-                onMouseLeave={e => e.currentTarget.style.color = "#64748b"}>{l.label}</a>
-            ))}
+              { label: "✉️ Email Us", href: "mailto:" + COMPANY.email },
+            ].map(function(l) {
+              return (
+                <a key={l.label} href={l.href} target="_blank" rel="noreferrer" style={{ display: "block", color: "#64748b", fontSize: "0.845rem", fontFamily: "'DM Sans', sans-serif", marginBottom: "0.55rem", cursor: "pointer", transition: "color 0.2s", textDecoration: "none" }}
+                  onMouseEnter={e => { e.currentTarget.style.color = "#00f5d4"; }}
+                  onMouseLeave={e => { e.currentTarget.style.color = "#64748b"; }}>{l.label}</a>
+              );
+            })}
           </div>
         </div>
         <div style={{ borderTop: "1px solid rgba(255,255,255,0.05)", paddingTop: "1.75rem", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "0.75rem" }}>
@@ -648,14 +646,16 @@ function Loader({ done }) {
       <div style={{ width: 220, height: 2, background: "rgba(255,255,255,0.05)", borderRadius: 1, overflow: "hidden" }}>
         <div style={{ height: "100%", background: "linear-gradient(90deg, #00f5d4, #7c3aed)", borderRadius: 1, animation: "loadbar 1.7s ease-in-out forwards" }} />
       </div>
-      <div style={{ marginTop: "0.9rem", color: "#1e293b", fontSize: "0.72rem", fontFamily: "'DM Sans', sans-serif", letterSpacing: "0.12em" }}>INITIALIZING SYSTEMS...</div>
     </div>
   );
 }
 
 export default function App() {
   const [loaded, setLoaded] = useState(false);
-  useEffect(() => { const t = setTimeout(() => setLoaded(true), 2100); return () => clearTimeout(t); }, []);
+  useEffect(() => {
+    const t = setTimeout(() => setLoaded(true), 2100);
+    return () => clearTimeout(t);
+  }, []);
   return (
     <div style={{ background: "#020617", minHeight: "100vh", color: "#fff", fontFamily: "'DM Sans', sans-serif" }}>
       <style>{`
@@ -666,10 +666,7 @@ export default function App() {
         @keyframes bounce{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(9px)}}
         @keyframes loadbar{from{width:0}to{width:100%}}
         @media(max-width:768px){.desktop-nav{display:none!important}.hamburger{display:flex!important;align-items:center}}
-        @media(max-width:860px){
-          #about>div{grid-template-columns:1fr!important}
-          #contact .contact-grid{grid-template-columns:1fr!important}
-        }
+        @media(max-width:860px){#about>div,#contact>div>div{grid-template-columns:1fr!important}}
         ::-webkit-scrollbar{width:5px}
         ::-webkit-scrollbar-track{background:#020617}
         ::-webkit-scrollbar-thumb{background:rgba(0,245,212,0.28);border-radius:3px}
